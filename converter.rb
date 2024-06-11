@@ -46,7 +46,7 @@ puts "What is your desired flight airline name?"
 flightAirline = gets.chomp().downcase
 
 sterilizedFlightAirline = flightAirline.sub(' airlines','').sub(' airways','')     
-capitalizedFlightAirline = flightAirline.split.map(&:capitalize).join(' ')
+capitalizedFlightAirline = flightAirline.split.map(&:capitalize).join(' ') 
 
 def member_of_array(airlineName, array)
     for member in array do
@@ -75,7 +75,7 @@ if flightAlliance
 
     for alliancePartner in alliances[flightAlliance] do
         cards.each { |cardName, transferPartners|
-            puts "You can transfer your #{cardName} points to #{alliancePartner}"  if member_of_array(alliancePartner,transferPartners)
+            puts "You can transfer #{cardName} points to #{alliancePartner}"  if member_of_array(alliancePartner,transferPartners)
         }
     end  
 else
@@ -105,7 +105,7 @@ directPartners.each{|airline, partners|
         for partner in partners do
             cards.each { |cardName, transferPartners|
                 if member_of_array(partner, transferPartners)
-                    puts "You can transfer points directly to #{partner} partner from #{cardName}" 
+                    puts "You can transfer #{cardName} points directly to #{partner}" 
                 else 
                     # puts "You can't convert #{cardName} points to #{partner} miles." 
                 end
