@@ -27,10 +27,9 @@ arabHubs = ['DXB', 'DOH', 'JED', 'AUH', 'RUH', 'KWI', 'BHR', 'TLV', 'AMM', 'AQJ'
 asiaHubs = ['EVN', 'GYD', 'NAY', 'PEK', 'PVG', 'SHA', 'HKG', 'BLR', 'BOM', 'DEL', 'CGK', 'KIX', 'NGO', 'NRT', 'FRU', 'MFM', 'KUL', 'ULN', 'KTM', 'MNL', 'TPE', 'GMP', 'ICN', 'SIN', 'DAM', 'DMK', 'HKT', 'TAS', 'HAN']
 oceaniaHubs = ['SYD', 'MEL', 'AKL']
 
-
-from = 'IAD'
-to = 'AUH'
-date = '2024-11-26'
+from = 'AUH'
+to = 'IAD'
+date = '2024-12-09'
 minimumLayover = 120
 firstLegFlights = []
 secondLegFlights = []
@@ -85,35 +84,37 @@ itineraries = get_itineraries(from, to, date)
 bestFlight = pick_direct_flight(itineraries)[0]
 
 puts
-puts "Direct flight between #{bestFlight.from} and #{bestFlight.to} is available:"
-puts "Flight number: #{bestFlight.number}"
-puts "Airline: #{bestFlight.airline}"
-puts "Flight duration: #{Float(bestFlight.duration/60).round(2)} hours"
-puts "Price: $#{bestFlight.price.round(0)}"
+if bestFlight
+  puts "Direct flight between #{bestFlight.from} and #{bestFlight.to} is available:"
+  puts "Flight number: #{bestFlight.number}"
+  puts "Airline: #{bestFlight.airline}"
+  puts "Flight duration: #{Float(bestFlight.duration/60).round(2)} hours"
+  puts "Price: $#{bestFlight.price.round(0)}"
+else
+  puts "There are no direct flights between #{from} and #{to}"
+end 
 
 for hub in hubs
   unless from == hub
     itineraries = get_itineraries(from, hub, date)
     if itineraries
-      flights = pick_direct_flight(itineraries) 
-      if flights.size > 0
-        firstLegFlights += flights
-      end
+      directFlights = pick_direct_flight(itineraries) 
+      firstLegFlights += directFlights if directFlights.size > 0 
     end
   end
 end
 
-for each in firstLegFlights
-    unless each.to == to
-      itineraries = get_itineraries(each.to, to, date)
+for flight in firstLegFlights
+    unless flight.to == to
+      itineraries = get_itineraries(flight.to, to, date)
       if itineraries
-        flights = pick_direct_flight(itineraries) 
-        if flights.size > 0
-          secondLegFlights += flights
-        end
+        directFlights = pick_direct_flight(itineraries) 
+        secondLegFlights += directFlights if directFlights.size > 0 
       end  
     end
 end
+
+puts firstLegFlights.empty?, secondLegFlights.empty?
 
 for firstFlight in firstLegFlights
   for secondFlight in secondLegFlights
@@ -139,7 +140,8 @@ if bestFlight.stop
   puts "Flight numbers: #{bestFlight.number}"
   puts "Airlines: #{bestFlight.airline}"
   puts "In air time: #{Float(bestFlight.duration/60).round(2)} hours"
+  puts "Total time: #{Float(bestFlight.duration/60).round(2) + bestFlight.layoverTime/60.round(2)} hours"
   puts "Price: $#{bestFlight.price}"
 else
-  puts "No cheaper route is available"
+  puts "There are no cheaper routes with layover"
 end  
