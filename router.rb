@@ -2,6 +2,7 @@ require 'uri'
 require 'net/http'
 require 'openssl'
 require 'time'
+require 'json'
 
 class Flight
   attr_accessor :number, :airline, :from, :to, :duration, :price, :stop, :arrivalTime, :departureTime, :layoverTime
@@ -27,14 +28,14 @@ asiaHubs = ['EVN', 'GYD', 'NAY', 'PEK', 'PVG', 'SHA', 'HKG', 'BLR', 'BOM', 'DEL'
 oceaniaHubs = ['SYD', 'MEL', 'AKL']
 
 
-from = 'DFW'
-to = 'BUE'
-date = '2023-02-19'
+from = 'IAD'
+to = 'AUH'
+date = '2024-11-26'
 minimumLayover = 120
 firstLegFlights = []
 secondLegFlights = []
 
-hubs = usaHubs+latinHubs
+hubs = euroHubs
 
 puts 
 puts "Looking for flights between #{from} and #{to} on #{date}..."
@@ -53,7 +54,7 @@ def get_itineraries (from, to, date)
     response = http.request(request)
     results = response.body
     json = JSON.parse(results)
-    # json['message']
+    json['message']
     unless json['getAirFlightDepartures']['error'] 
       return itineraries = json['getAirFlightDepartures']['results']['result']['itinerary_data']
     end
