@@ -2,17 +2,11 @@
 # Can have extended stopover in Dubai
 # https://fly2.emirates.com/CAB/IBE/SearchAvailability.aspx
 
-# Can book flights operated by
-
-# Quantas 
-# United 
-# AirCanada (bi-directional) (North America)
-# Aegean (Greece)
-# Air Baltic (between Dubai and Riga, within Baltic)
-# Air Mauritius
-# Avianca
-
 directPartners = {
+    'Emirates' => ['flydubai','Qantas','United','Air Canada','Aegean Airlines','Air Baltic','Air Mauritius','Avianca','Azul',
+        'Bangkok Airways','Batik Air Indonesia','Batik Air Malaysia','China Southern Airlines','Copa Airlines','Garuda Indonesia',
+        'GOL Airlines','Gulf Air','Japan Airlines','Jetstar Airways','Jetstar Asia','KM Malta Airlines','Korean Air','Royal Air Maroc',
+        'S7 Airlines','South Africa Airlink','South African Airways','TAP Portugal','Thai Airways','Tunis Air','WestJet'],
     'Etihad' => ['Air Canada', 'Air Europa', 'Air France KLM', 'Air New Zealand', 'All Nippon Airways', 'Asiana Airlines', 'Avianca',
         'Bangkok Airways', 'FlexFlight', 'Belavia', 'Brussels Airlines', 'China Eastern', 'Egyptair', 'EL AL Airlines', 'Garuda Indonesia',
         'Gulf Air', 'ITA Airways', 'JetBlue', 'Korean Air', 'Lufthansa', 'Middle East Air', 'Royal Air Maroc', 'SWISS',
@@ -21,11 +15,11 @@ directPartners = {
 
 alliances = {
     'OneWorld' => ['Alaska Airlines', 'American Airlines', 'British Airways', 'Cathay Pacific', 'Finnair', 'Iberia', 'Japan Airlines',
-        'Malaysia Airlines', 'Qantas', 'Qatar Airways', 'Royal Jordanian', 'Royal Air Morocco','Fiji Airways', 'Oman Air', 
+        'Malaysia Airlines', 'Qantas', 'Qatar Airways', 'Royal Jordanian', 'Royal Air Morocco','Fiji Airways', 'Oman Air',
         'SriLankan Airlines'],
 
     'Skyteam' => ['Aeroflot', 'Aerolíneas Argentinas', 'Aeroméxico', 'Air Europa', 'Air France KLM', 'ITA Airways', 'China Airlines',
-        'China Eastern Airlines','Czech Airlines', 'Delta AirLines', 'Garuda Indonesia', 'Kenya Airways', 'Korean Air', 
+        'China Eastern Airlines','Czech Airlines', 'Delta AirLines', 'Garuda Indonesia', 'Kenya Airways', 'Korean Air',
         'Middle East Airlines', 'Saudia', 'TAROM', 'Vietnam Airlines', 'Virgin Atlantic', 'Xiamen Airlines'],
 
     'Star Alliance' => ['Aegean Airlines', 'Air Canada','Air China', 'Air India', 'Air New Zealand', 'ANA','Asiana Airlines',
@@ -35,9 +29,9 @@ alliances = {
 }
 
 cards = {
-    'Capital One' => ['Virgin Atlantic', 'TAP', 'Singapore Airlines', 'Qantas', 'Finnair', 'EVA Air', 'Etihad', 'Emirates', 
+    'Capital One' => ['Virgin Atlantic', 'TAP', 'Singapore Airlines', 'Qantas', 'Finnair', 'EVA Air', 'Etihad', 'Emirates',
         'British Airways', 'Avianca', 'Cathay Pacific', 'All Accor', 'Air Canada', 'Aeromexico'],
-        
+
     'Chase' => ['Aer Lingus', 'Air Canada', 'British Airways', 'Emirates', 'Air France KLM', 'Iberia', 'JetBlue',
         'Singapore Airlines', 'Southwest', 'United', 'Cathay Pacific', 'Virgin Atlantic']
 }
@@ -45,15 +39,15 @@ cards = {
 puts "What is your desired flight airline name?"
 flightAirline = gets.chomp().downcase
 
-sterilizedFlightAirline = flightAirline.sub(' airlines','').sub(' airways','')     
-capitalizedFlightAirline = flightAirline.split.map(&:capitalize).join(' ') 
+sterilizedFlightAirline = flightAirline.sub(' airlines','').sub(' airways','')
+capitalizedFlightAirline = flightAirline.split.map(&:capitalize).join(' ')
 
 def member_of_array(airlineName, array)
     for member in array do
         return true if member.downcase.include?(airlineName.downcase)
-    end  
+    end
 
-    return false   
+    return false
 end
 
 flightAlliance = false
@@ -67,9 +61,9 @@ alliances.each {|allianceName, alliancePartners|
 # try points transfer to alliance partner
 if flightAlliance
     puts "\n#{capitalizedFlightAirline} is part of #{flightAlliance}.\n\nCheck these partner airlines to potentially book this flight with respective miles:"
-    for each in alliances[flightAlliance] do 
+    for each in alliances[flightAlliance] do
         print each + ', '
-    end    
+    end
     puts
     puts
 
@@ -77,21 +71,21 @@ if flightAlliance
         cards.each { |cardName, transferPartners|
             puts "You can transfer #{cardName} points to #{alliancePartner}"  if member_of_array(alliancePartner,transferPartners)
         }
-    end  
+    end
 else
-    puts "#{capitalizedFlightAirline} is not a member of an alliance"    
-end     
-    
+    puts "#{capitalizedFlightAirline} is not a member of an alliance"
+end
+
 puts
 
 cards.each { |cardName, transferPartners|
     # puts sterilizedFlightAirline, cardName, transferPartners
     if member_of_array(sterilizedFlightAirline, transferPartners)
-        puts "You can transfer #{cardName} points directly to #{capitalizedFlightAirline}" 
-    else 
-        # puts "You can't convert #{cardName} points directly to #{capitalizedFlightAirline} miles." 
+        puts "You can transfer #{cardName} points directly to #{capitalizedFlightAirline}"
+    else
+        # puts "You can't convert #{cardName} points directly to #{capitalizedFlightAirline} miles."
     end
-}    
+}
 
 puts
 directPartners.each{|airline, partners|
@@ -99,17 +93,17 @@ directPartners.each{|airline, partners|
         puts "You can also potentially book with points from one of #{capitalizedFlightAirline} partners:\n"
         for each in partners
             print each + ', '
-        end    
+        end
 
         puts "\n\n"
         for partner in partners do
             cards.each { |cardName, transferPartners|
                 if member_of_array(partner, transferPartners)
-                    puts "You can transfer #{cardName} points directly to #{partner}" 
-                else 
-                    # puts "You can't convert #{cardName} points to #{partner} miles." 
+                    puts "You can transfer #{cardName} points directly to #{partner}"
+                else
+                    # puts "You can't convert #{cardName} points to #{partner} miles."
                 end
-            }    
-        end 
-    end 
+            }
+        end
+    end
 }
